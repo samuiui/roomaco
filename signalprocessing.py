@@ -1,6 +1,8 @@
 import numpy as np
 import scipy
 from scipy.signal import sosfilt, butter, sosfiltfilt
+from scipy.fftpack import fft, ifft
+from scipy import unwrap, angle
 
 def order2fc(order, radix=10):
 	"""
@@ -164,12 +166,12 @@ def convolution(signal1, signal2):
 	convolve two signals
 
 	Parameters
-	--------------------------------------------------------------------------------------------
+	----------------------------------------------------------------------------
 	signal1, signal2: array like
 	    target signals of convolution 
 	    
 	Return
-	--------------------------------------------------------------------------------------------
+	----------------------------------------------------------------------------
 	convolved_signal: array like
 	    convolved signal        
 	"""
@@ -187,3 +189,28 @@ def convolution(signal1, signal2):
 	convolved_signal_complex = fftpack.ifft(convolved_signal_fft)
 	convolved_signal = np.real(convolved_signal_complex)
 	return convolved_signal
+
+def phase(signal, fs=44100):
+	"""
+	calculate frequency-phase character from signal
+
+	Parameters
+	----------------------------------------------------------------------------
+	signal: array like
+		time domain signal
+	fs: int
+		sampling rate
+
+	Returns
+	----------------------------------------------------------------------------
+	freq_list: array like
+		frequency list
+	phase: array like
+		frequency-phase character
+	"""
+	signal_freq = fft(signal)
+	phase = unwrap(angle(signal_freq[:int(len(signal)/2)]))
+	freq = np.fft.fftfreq(int(len(signal)/2), d=1.0/fs)
+	freq_list = freq[:int(len(freq)/2)]
+	output = phase[:int(len(phase)/2)]
+	return freq_list, output

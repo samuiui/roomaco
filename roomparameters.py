@@ -251,3 +251,21 @@ def center_time(ir, fs=44100):
 	ts_deno = np.sum(ir_power)
 	ts = ts_mole/ts_deno/fs
 	return ts
+
+def dB_curve(singal):
+	"""
+	convert scale of input singal to dB scale
+
+	Parameters
+	----------------------------------------------------------------------------
+	signal: array like
+		target signal
+
+	Returns
+	----------------------------------------------------------------------------
+	output: array like
+		signal in dB scale
+	"""
+	signal_square = signal ** 2
+	output = 10*log10(signal_square/max(signal_square))
+	return output

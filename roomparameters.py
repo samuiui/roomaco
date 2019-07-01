@@ -60,8 +60,7 @@ def clarity(ir, fc, bound_ms = 50, fs = 44100, rate=20):
 	"""
 	# split signal
 	bound_sample = int(bound_ms*0.001*fs)
-	ir_bpf = band_pass_filter(ir, fc, fs=fs, oct_width=1)
-	sound_arrival_sample = detect_arrival_sample(ir_bpf, rate=rate)
+	sound_arrival_sample = detect_arrival_sample(ir, rate=rate)
 	bound = bound_sample + sound_arrival_sample
 	ir_first = ir[sound_arrival_sample:bound]
 	ir_latter = ir[bound:]

@@ -20,15 +20,15 @@ def detect_arrival_sample(ir, rate = 20):
         detected direct sound arrival time[sample]
         note calc "arrival_sample*sampling frequency" to obtain arrival time[s]
 	"""
-	ir_power = ir ** 2.0
-	ir_power_max = max(ir_power)
+	ir_square = ir ** 2.0
+	ir_square_max = max(ir_square)
 	i = 0
 	arrival_sample = 0
-	power_rate = ir_power[i] / ir_power_max
+	power_rate = ir_square[i] / ir_square_max
 	for i in range(len(ir)):
-		if ir_power[i] != 0.0:
+		if ir_square[i] != 0.0:
 			arrival_sample = i
-			power_rate = ir_power[i] / ir_power_max
+			power_rate = ir_square[i] / ir_square_max
 			if 10.0*log10(power_rate) > -1.0*rate:
 				break
 		else:
@@ -148,12 +148,12 @@ def calc_decaycurve(ir):
 	decay_curve: array like
 	    schroeder decay curve
 	"""
-	ir_power = ir**2.0
-	ir_power_sum = np.sum(ir_power)
-	temp = ir_power_sum
+	ir_square = ir**2.0
+	ir_square_sum = np.sum(ir_square)
+	temp = ir_square_sum
 	curve=[]
 	for i in range(len(ir)):
-		temp = temp - ir_power[i]
+		temp = temp - ir_square[i]
 		curve.append(temp)
 	curve_dB = 10 * np.log10(curve)
 	curve_offset = max(curve_dB)
@@ -243,11 +243,11 @@ def center_time(ir, fs=44100):
 	ts: float
 		center time[sec]		
 	"""
-	ir_power = ir**2
+	ir_square = ir**2
 	ts_mole = 0
-	for t in range(len(ir_power)):
-		ts_mole += t*ir_power[t]
-	ts_deno = np.sum(ir_power)
+	for t in range(len(ir_square)):
+		ts_mole += t*ir_square[t]
+	ts_deno = np.sum(ir_square)
 	ts = ts_mole/ts_deno/fs
 	return ts
 
